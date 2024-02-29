@@ -32,12 +32,13 @@ class CreatureTest {
                 .surname("Doe")
                 .age(25)
                 .job(Job.FARMER)
-                .characteristic(List.of("Strong", "Hardworking"))
+                .characteristic(List.of())
                 .stomachSize(10)
                 .health(100)
                 .baseHealth(100)
                 .damage(10)
                 .magic(10)
+                .workingForce(10)
                 .build();
     }
 
@@ -76,12 +77,13 @@ class CreatureTest {
                 .surname("Doe")
                 .age(25)
                 .job(Job.FARMER)
-                .characteristic(List.of("Strong", "Hardworking"))
+                .characteristic(List.of())
                 .stomachSize(10)
                 .health(10)
                 .baseHealth(10)
                 .damage(10)
                 .magic(10)
+                .workingForce(10)
                 .build();
 
         Villager jane = new Villager.Builder()
@@ -89,12 +91,13 @@ class CreatureTest {
                 .surname("Doe")
                 .age(25)
                 .job(Job.FARMER)
-                .characteristic(List.of("Strong", "Hardworking"))
+                .characteristic(List.of())
                 .stomachSize(10)
                 .health(10)
                 .baseHealth(10)
                 .damage(10)
                 .magic(10)
+                .workingForce(10)
                 .build();
         orc.attack(List.of(john, jane, villager));
         assertEquals(0, john.getHealth());

@@ -1,18 +1,22 @@
 package org.acme.villagers;
 
+import org.acme.villagers.characteristics.Characteristic;
+
 import java.util.List;
 
 public class Villager {
     private String name;
     private String surname;
     private int age;
-    private Job job; // Change this to an enum or a class
-    private List<String> characteristic; // Change this to an enum or a class
+    private Job job;
+    private List<Characteristic> characteristic; // Change this to an enum or a class
     private int stomachSize;
     private int health;
     private int baseHealth;
     private int damage;
     private int magic;
+
+    private int workingForce;
 
 
     private Villager(Builder builder) {
@@ -26,6 +30,7 @@ public class Villager {
         this.baseHealth = builder.baseHealth;
         this.damage = builder.damage;
         this.magic = builder.magic;
+        this.workingForce = builder.workingForce;
     }
 
     // Getters
@@ -45,7 +50,7 @@ public class Villager {
         return job;
     }
 
-    public List<String> getCharacteristic() {
+    public List<Characteristic> getCharacteristic() {
         return characteristic;
     }
 
@@ -69,6 +74,10 @@ public class Villager {
         return magic;
     }
 
+    public int getWorkingForce() {
+        return workingForce;
+    }
+
     // Setters
 
     public void setName(String name) {
@@ -87,7 +96,7 @@ public class Villager {
         this.job = job;
     }
 
-    public void setCharacteristic(List<String> characteristic) {
+    public void setCharacteristic(List<Characteristic> characteristic) {
         this.characteristic = characteristic;
     }
 
@@ -109,6 +118,10 @@ public class Villager {
 
     public void setMagic(int magic) {
         this.magic = magic;
+    }
+
+    public void setWorkingForce(int workingForce) {
+        this.workingForce = workingForce;
     }
 
 
@@ -145,19 +158,26 @@ public class Villager {
 
     }
 
+    public void applyCharacteristics() {
+        for (Characteristic c : characteristic) {
+            c.apply(this);
+        }
+    }
+
 
 
     public static class Builder {
         private String name;
         private String surname;
         private Integer age;
-        private Job job; // Change this to an enum or a class
-        private List<String> characteristic; // Change this to an enum or a class
+        private Job job;
+        private List<Characteristic> characteristic; // Change this to an enum or a class
         private Integer stomachSize;
         private Integer health;
         private Integer baseHealth;
         private Integer damage;
         private Integer magic;
+        private Integer workingForce;
 
 
         public Builder name(String name) {
@@ -180,7 +200,7 @@ public class Villager {
             return this;
         }
 
-        public Builder characteristic(List<String> characteristic) {
+        public Builder characteristic(List<Characteristic> characteristic) {
             this.characteristic = characteristic;
             return this;
         }
@@ -210,6 +230,12 @@ public class Villager {
             return this;
         }
 
+        public Builder workingForce(Integer workingForce) {
+            this.workingForce = workingForce;
+            return this;
+        }
+
+
         public Villager build() {
             if (name == null ||
                     surname == null ||
@@ -220,7 +246,8 @@ public class Villager {
                     health == null ||
                     baseHealth == null ||
                     damage == null ||
-                    magic == null
+                    magic == null ||
+                    workingForce == null
             ) {
                 throw new IllegalStateException("All fields must be set");
             }
