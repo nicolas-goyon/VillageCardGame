@@ -243,6 +243,29 @@ class VillagerTest {
         assertEquals(100, villager.getBaseHealth());
         assertEquals(100, villager.getHealth());
         assertEquals(10, villager.getMagic());
+    }
+
+    @Test
+    void produceFood(){
+        assertEquals(10, villager.produceFood());
+
+        Villager villager = new Villager.Builder()
+                .name("John")
+                .surname("Doe")
+                .age(25)
+                .job(Job.FARMER)
+                .characteristic(List.of(VillagerCharacteristic.HARDWORKING))
+                .stomachSize(10)
+                .health(100)
+                .baseHealth(100)
+                .damage(10)
+                .magic(10)
+                .workingForce(10)
+                .build();
+
+        villager.applyCharacteristics();
+
+        assertEquals(12, villager.produceFood());
 
     }
 }

@@ -164,6 +164,10 @@ public class Villager {
         }
     }
 
+    public int produceFood() {
+        return this.workingForce;
+    }
+
 
 
     public static class Builder {
