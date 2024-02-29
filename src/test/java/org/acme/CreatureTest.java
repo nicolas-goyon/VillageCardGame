@@ -1,7 +1,8 @@
 package org.acme;
 
 import io.quarkus.test.junit.QuarkusTest;
-import org.aesh.readline.editing.Vi;
+import org.acme.creatures.Creature;
+import org.acme.creatures.CreatureType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -119,5 +120,20 @@ class CreatureTest {
         Creature.Builder builder = new Creature.Builder();
         builderConsumer.accept(builder);
         assertThrows(IllegalStateException.class, builder::build);
+    }
+
+    @Test
+    void enumTest(){
+        assertEquals("Goblin", CreatureType.GOBLIN.create().getName());
+        assertEquals(10, CreatureType.GOBLIN.create().getHealth());
+        assertEquals(3, CreatureType.GOBLIN.create().getDamage());
+
+        assertEquals("Orc", CreatureType.ORC.create().getName());
+        assertEquals(50, CreatureType.ORC.create().getHealth());
+        assertEquals(20, CreatureType.ORC.create().getDamage());
+
+        assertEquals("Snake", CreatureType.DRAGON.create().getName());
+        assertEquals(5, CreatureType.DRAGON.create().getHealth());
+        assertEquals(10, CreatureType.DRAGON.create().getDamage());
     }
 }

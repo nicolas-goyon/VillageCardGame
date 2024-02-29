@@ -1,8 +1,12 @@
-package org.acme;
+package org.acme.creatures;
+
+import org.acme.Villager;
 
 import java.util.List;
 
 public class Creature {
+
+
     private final String name;
     private int health;
     private final int damage;
@@ -43,7 +47,7 @@ public class Creature {
         int damageLeft = this.damage;
         for (Villager villager : villagers) {
             if (damageLeft <= 0) {
-                break; // FIXME : Coverage will not be 100% with this line
+                break;
             }
             damageLeft = villager.takeDamage(damageLeft);
         }
@@ -83,4 +87,6 @@ public class Creature {
             return new Creature(this);
         }
     }
+
+
 }
