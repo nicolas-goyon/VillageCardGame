@@ -7,6 +7,7 @@ import org.acme.villagers.characteristics.VillagerCharacteristic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -267,5 +268,128 @@ class VillagerTest {
 
         assertEquals(12, villager.produceFood());
 
+
+        villager = new Villager.Builder()
+                .name("John")
+                .surname("Doe")
+                .age(25)
+                .job(Job.UNEMPLOYED)
+                .characteristic(List.of(VillagerCharacteristic.LAZYBONES))
+                .stomachSize(10)
+                .health(100)
+                .baseHealth(100)
+                .damage(10)
+                .magic(10)
+                .workingForce(10)
+                .build();
+
+        villager.applyCharacteristics();
+
+        assertThrows(IllegalStateException.class, villager::produceFood);
+    }
+
+
+    @Test
+    void healing(){
+        Villager healer = new Villager.Builder()
+                .name("John")
+                .surname("Doe")
+                .age(25)
+                .job(Job.HEALER)
+                .characteristic(List.of(VillagerCharacteristic.SMART))
+                .stomachSize(10)
+                .health(100)
+                .baseHealth(100)
+                .damage(10)
+                .magic(150)
+                .workingForce(10)
+                .build();
+
+        List<Villager> villagers = new ArrayList<>();
+        villagers.add(
+                new Villager.Builder()
+                        .name("John")
+                        .surname("Doe")
+                        .age(25)
+                        .job(Job.FARMER)
+                        .characteristic(List.of(VillagerCharacteristic.HARDWORKING))
+                        .stomachSize(10)
+                        .health(100)
+                        .baseHealth(100)
+                        .damage(10)
+                        .magic(10)
+                        .workingForce(10)
+                        .build()
+        );
+
+        villagers.add(
+                new Villager.Builder()
+                        .name("John")
+                        .surname("Doe")
+                        .age(25)
+                        .job(Job.FARMER)
+                        .characteristic(List.of(VillagerCharacteristic.HARDWORKING))
+                        .stomachSize(10)
+                        .health(100)
+                        .baseHealth(100)
+                        .damage(10)
+                        .magic(10)
+                        .workingForce(10)
+                        .build()
+        );
+
+        villagers.getFirst().takeDamage(50);
+
+        healer.heal(villagers);
+
+        assertEquals(100, villagers.getFirst().getHealth());
+
+        villagers.getFirst().takeDamage(50);
+        villagers.getLast().takeDamage(50);
+
+        healer.heal(villagers);
+
+        assertEquals(100, villagers.getFirst().getHealth());
+        assertEquals(100, villagers.getLast().getHealth());
+
+        healer.setMagic(70);
+
+        villagers.getFirst().takeDamage(50);
+        villagers.getLast().takeDamage(50);
+
+        healer.heal(villagers);
+
+        assertEquals(100, villagers.getFirst().getHealth());
+        assertEquals(70, villagers.getLast().getHealth());
+
+
+        Villager notHealer = new Villager.Builder()
+                .name("John")
+                .surname("Doe")
+                .age(25)
+                .job(Job.FARMER)
+                .characteristic(List.of(VillagerCharacteristic.SMART))
+                .stomachSize(10)
+                .health(100)
+                .baseHealth(100)
+                .damage(10)
+                .magic(150)
+                .workingForce(10)
+                .build();
+
+        assertThrows(IllegalStateException.class, () -> notHealer.heal(villagers));
+
+        villagers.add(notHealer);
+
+        healer.setMagic(10);
+
+        villagers.getFirst().takeDamage(50);
+
+        healer.heal(villagers);
+
+        assertEquals(60, villagers.getFirst().getHealth());
+
+
+        assertEquals(0, healer.heal(0));
     }
 }

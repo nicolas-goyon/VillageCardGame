@@ -158,6 +158,20 @@ public class Villager {
 
     }
 
+    public int heal(int healthPoints) {
+        if (healthPoints <= 0) {
+            return 0;
+        }
+        int healthPointsLeft = this.baseHealth - this.health;
+        this.health += healthPoints;
+
+        if (this.health > this.baseHealth) {
+            this.health = this.baseHealth;
+        }
+
+        return Math.max(healthPoints - healthPointsLeft, 0);
+    }
+
     public void applyCharacteristics() {
         for (Characteristic c : characteristic) {
             c.apply(this);
@@ -165,7 +179,23 @@ public class Villager {
     }
 
     public int produceFood() {
+        if(!this.job.equals(Job.FARMER)) {
+            throw new IllegalStateException("Only farmers can produce food");
+        }
         return this.workingForce;
+    }
+
+    public void heal(List<Villager> villagers) {
+        if(!this.job.equals(Job.HEALER)) {
+            throw new IllegalStateException("Only healers can heal");
+        }
+        int healthPoints = this.magic;
+        for (Villager villager : villagers) {
+            if (healthPoints <= 0) {
+                break;
+            }
+            healthPoints = villager.heal(healthPoints);
+        }
     }
 
 
