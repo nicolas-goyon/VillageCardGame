@@ -5,7 +5,6 @@ plugins {
     id 'jacoco'
 }
 
-
 repositories {
     mavenCentral()
     mavenLocal()
@@ -24,8 +23,8 @@ group 'org.acme'
 version '1.0.0-SNAPSHOT'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 test {
@@ -37,7 +36,6 @@ test {
     }
     jacocoTestReport.enabled = true
 }
-
 compileJava {
     options.encoding = 'UTF-8'
     options.compilerArgs << '-parameters'
@@ -46,12 +44,14 @@ compileJava {
 compileTestJava {
     options.encoding = 'UTF-8'
 }
+
 sonar {
     properties {
         property "sonar.projectKey", "projet-16"
         property "sonar.token", "sqp_5765f47453c6e99353181a05732a61005a2ac04c"
         property "sonar.projectName", "projet-16"
         property "sonar.qualitygate.wait", true
+        property "sonar.gradle.skipCompile", true
         property "sonar.host.url", "https://sonar.home.lange.xyz"
         tasks.jacocoTestReport.configure {
             property("sonar.coverage.jacoco.xmlReportPaths", ["build/reports/jacoco/test/jacocoTestReport.xml"])
@@ -60,8 +60,8 @@ sonar {
 }
 jacocoTestReport {
     reports {
-    xml.required = true
-    csv.required = true
-    html.required = true
+        xml.required = true
+        csv.required = true
+        html.required = true
     }
 }
