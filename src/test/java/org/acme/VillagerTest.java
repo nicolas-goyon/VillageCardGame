@@ -1,6 +1,8 @@
 package org.acme;
 
 import io.quarkus.test.junit.QuarkusTest;
+import org.acme.creatures.Creature;
+import org.acme.creatures.CreatureType;
 import org.acme.villagers.Job;
 import org.acme.villagers.Villager;
 import org.acme.villagers.characteristics.VillagerCharacteristic;
@@ -391,5 +393,38 @@ class VillagerTest {
 
 
         assertEquals(0, healer.heal(0));
+    }
+
+    @Test
+    void warriorTest(){
+        villager.setJob(Job.WARRIOR);
+
+
+        List<Creature> creatures = new ArrayList<>();
+
+        creatures.add(CreatureType.GOBLIN.create());
+        creatures.add(CreatureType.ORC.create());
+        creatures.add(CreatureType.SNAKE.create());
+
+
+        villager.attack(creatures);
+
+        assertEquals(0, creatures.getFirst().getHealth());
+
+        Villager notWarrior = new Villager.Builder()
+                .name("John")
+                .surname("Doe")
+                .age(25)
+                .job(Job.FARMER)
+                .characteristic(List.of(VillagerCharacteristic.SMART))
+                .stomachSize(10)
+                .health(100)
+                .baseHealth(100)
+                .damage(10)
+                .magic(150)
+                .workingForce(10)
+                .build();
+
+        assertThrows(IllegalStateException.class, () -> notWarrior.attack(creatures));
     }
 }

@@ -3,7 +3,7 @@ package org.acme.creatures;
 public enum CreatureType {
     GOBLIN("Goblin", 10, 3),
     ORC("Orc", 50, 20),
-    DRAGON("Snake", 5, 10);
+    SNAKE("Snake", 5, 10);
 
     private final String name;
     private final int health;

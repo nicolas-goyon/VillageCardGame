@@ -137,8 +137,8 @@ class CreatureTest {
         assertEquals(50, CreatureType.ORC.create().getHealth());
         assertEquals(20, CreatureType.ORC.create().getDamage());
 
-        assertEquals("Snake", CreatureType.DRAGON.create().getName());
-        assertEquals(5, CreatureType.DRAGON.create().getHealth());
-        assertEquals(10, CreatureType.DRAGON.create().getDamage());
+        assertEquals("Snake", CreatureType.SNAKE.create().getName());
+        assertEquals(5, CreatureType.SNAKE.create().getHealth());
+        assertEquals(10, CreatureType.SNAKE.create().getDamage());
     }
 }

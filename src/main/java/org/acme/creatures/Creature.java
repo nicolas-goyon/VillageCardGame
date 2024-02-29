@@ -1,15 +1,9 @@
 package org.acme.creatures;
 
-import org.acme.villagers.Villager;
+import org.acme.interfaces.Soldier;
 
-import java.util.List;
-
-public class Creature {
-
-
+public class Creature extends Soldier {
     private final String name;
-    private int health;
-    private final int damage;
 
     private Creature(Creature.Builder builder) {
         this.name = builder.name;
@@ -29,29 +23,7 @@ public class Creature {
         return damage;
     }
 
-    public int takeDamage(int damage) {
-        if (damage < 0) {
-            throw new IllegalArgumentException("Damage cannot be negative");
-        }
-        int damageLeft = damage - this.health;
-        this.health -= damage;
 
-        if (this.health < 0) {
-            this.health = 0;
-        }
-
-        return Math.max(damageLeft, 0);
-    }
-
-    public void attack(List<Villager> villagers) {
-        int damageLeft = this.damage;
-        for (Villager villager : villagers) {
-            if (damageLeft <= 0) {
-                break;
-            }
-            damageLeft = villager.takeDamage(damageLeft);
-        }
-    }
 
     public static class Builder {
         private String name;

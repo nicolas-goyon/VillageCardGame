@@ -1,19 +1,19 @@
 package org.acme.villagers;
 
+import org.acme.interfaces.Damageable;
+import org.acme.interfaces.Soldier;
 import org.acme.villagers.characteristics.Characteristic;
 
 import java.util.List;
 
-public class Villager {
+public class Villager extends Soldier {
     private String name;
     private String surname;
     private int age;
     private Job job;
     private List<Characteristic> characteristic; // Change this to an enum or a class
     private int stomachSize;
-    private int health;
     private int baseHealth;
-    private int damage;
     private int magic;
 
     private int workingForce;
@@ -140,23 +140,8 @@ public class Villager {
         return disponibleFood;
     }
 
-    /**
-     *
-     * @param damage
-     * @return the damage not taken (the amount of damage that is above the health of the villager)
-     */
-    public int takeDamage(int damage) {
-        if (damage < 0) throw new IllegalArgumentException("Damage must be a positive number");
-        int damageLeft = damage - this.health;
-        this.health -= damage;
 
-        if (this.health < 0) {
-            this.health = 0;
-        }
 
-        return Math.max(damageLeft, 0);
-
-    }
 
     public int heal(int healthPoints) {
         if (healthPoints <= 0) {
@@ -197,6 +182,15 @@ public class Villager {
             healthPoints = villager.heal(healthPoints);
         }
     }
+
+    @Override
+    public void attack(List<? extends Damageable> damageable) {
+        if (!this.job.equals(Job.WARRIOR)) {
+            throw new IllegalStateException("Only soldiers can attack");
+        }
+        super.attack(damageable);
+    }
+
 
 
 
