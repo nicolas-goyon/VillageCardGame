@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
-public class CreatureTest {
+class CreatureTest {
 
     private Creature creature;
     private Villager villager;
