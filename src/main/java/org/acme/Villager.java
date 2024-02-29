@@ -148,8 +148,6 @@ public class Villager {
         private Integer damage;
         private Integer magic;
 
-        public VillagerBuilder() {
-        }
 
         public VillagerBuilder name(String name) {
             this.name = name;

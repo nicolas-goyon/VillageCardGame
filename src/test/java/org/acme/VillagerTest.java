@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -76,15 +77,21 @@ class VillagerTest {
 
     @Test
     void testBuilderExceptions() {
-        assertThrows(IllegalStateException.class, () -> new Villager.VillagerBuilder().build());
-        assertThrows(IllegalStateException.class, () -> new Villager.VillagerBuilder().name("John").build());
-        assertThrows(IllegalStateException.class, () -> new Villager.VillagerBuilder().name("John").surname("Doe").build());
-        assertThrows(IllegalStateException.class, () -> new Villager.VillagerBuilder().name("John").surname("Doe").age(25).build());
-        assertThrows(IllegalStateException.class, () -> new Villager.VillagerBuilder().name("John").surname("Doe").age(25).job("Farmer").build());
-        assertThrows(IllegalStateException.class, () -> new Villager.VillagerBuilder().name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")).build());
-        assertThrows(IllegalStateException.class, () -> new Villager.VillagerBuilder().name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")).stomachSize(10).build());
-        assertThrows(IllegalStateException.class, () -> new Villager.VillagerBuilder().name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")).stomachSize(10).health(100).build());
-        assertThrows(IllegalStateException.class, () -> new Villager.VillagerBuilder().name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")).stomachSize(10).health(100).baseHealth(100).build());
+        testBuilderException(builder -> {});
+        testBuilderException(builder -> builder.name("John"));
+        testBuilderException(builder -> builder.name("John").surname("Doe"));
+        testBuilderException(builder -> builder.name("John").surname("Doe").age(25));
+        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job("Farmer"));
+        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")));
+        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")).stomachSize(10));
+        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")).stomachSize(10).health(100));
+        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")).stomachSize(10).health(100).baseHealth(100));
+    }
+
+    private void testBuilderException(Consumer<Villager.VillagerBuilder> builderConsumer) {
+        Villager.VillagerBuilder builder = new Villager.VillagerBuilder();
+        builderConsumer.accept(builder);
+        assertThrows(IllegalStateException.class, builder::build);
     }
 
     @Test
