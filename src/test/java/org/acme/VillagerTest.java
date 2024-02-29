@@ -1,6 +1,8 @@
 package org.acme;
 
 import io.quarkus.test.junit.QuarkusTest;
+import org.acme.villagers.Job;
+import org.acme.villagers.Villager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +22,7 @@ class VillagerTest {
                 .name("John")
                 .surname("Doe")
                 .age(25)
-                .job("Farmer")
+                .job(Job.FARMER)
                 .characteristic(List.of("Strong", "Hardworking"))
                 .stomachSize(10)
                 .health(100)
@@ -35,7 +37,7 @@ class VillagerTest {
         assertEquals("John", villager.getName());
         assertEquals("Doe", villager.getSurname());
         assertEquals(25, villager.getAge());
-        assertEquals("Farmer", villager.getJob());
+        assertEquals(Job.FARMER, villager.getJob());
         assertEquals(List.of("Strong", "Hardworking"), villager.getCharacteristic());
         assertEquals(10, villager.getStomachSize());
         assertEquals(100, villager.getHealth());
@@ -81,11 +83,11 @@ class VillagerTest {
         testBuilderException(builder -> builder.name("John"));
         testBuilderException(builder -> builder.name("John").surname("Doe"));
         testBuilderException(builder -> builder.name("John").surname("Doe").age(25));
-        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job("Farmer"));
-        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")));
-        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")).stomachSize(10));
-        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")).stomachSize(10).health(100));
-        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")).stomachSize(10).health(100).baseHealth(100));
+        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job(Job.FARMER));
+        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job(Job.FARMER).characteristic(List.of("Strong", "Hardworking")));
+        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job(Job.FARMER).characteristic(List.of("Strong", "Hardworking")).stomachSize(10));
+        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job(Job.FARMER).characteristic(List.of("Strong", "Hardworking")).stomachSize(10).health(100));
+        testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job(Job.FARMER).characteristic(List.of("Strong", "Hardworking")).stomachSize(10).health(100).baseHealth(100));
     }
 
     private void testBuilderException(Consumer<Villager.Builder> builderConsumer) {
@@ -102,8 +104,8 @@ class VillagerTest {
         assertEquals("Smith", villager.getSurname());
         villager.setAge(30);
         assertEquals(30, villager.getAge());
-        villager.setJob("Blacksmith");
-        assertEquals("Blacksmith", villager.getJob());
+        villager.setJob(Job.WARRIOR);
+        assertEquals(Job.WARRIOR, villager.getJob());
         villager.setCharacteristic(List.of("Strong", "Hardworking", "Smart"));
         assertEquals(List.of("Strong", "Hardworking", "Smart"), villager.getCharacteristic());
         villager.setStomachSize(20);
@@ -128,7 +130,14 @@ class VillagerTest {
         assertEquals(0, villager.getHealth());
 
         assertThrows(IllegalArgumentException.class, () -> villager.takeDamage(-10));
+    }
 
+    @Test
+    void jobEnumTest(){
+        assertEquals("Farmer", Job.FARMER.getName());
+        assertEquals("Warrior", Job.WARRIOR.getName());
+        assertEquals("Healer", Job.HEALER.getName());
+        assertEquals("Unemployed", Job.UNEMPLOYED.getName());
 
     }
 }

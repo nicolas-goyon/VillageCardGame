@@ -1,4 +1,4 @@
-package org.acme;
+package org.acme.villagers;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ public class Villager {
     private String name;
     private String surname;
     private int age;
-    private String job; // Change this to an enum or a class
+    private Job job; // Change this to an enum or a class
     private List<String> characteristic; // Change this to an enum or a class
     private int stomachSize;
     private int health;
@@ -41,7 +41,7 @@ public class Villager {
         return age;
     }
 
-    public String getJob() {
+    public Job getJob() {
         return job;
     }
 
@@ -83,7 +83,7 @@ public class Villager {
         this.age = age;
     }
 
-    public void setJob(String job) {
+    public void setJob(Job job) {
         this.job = job;
     }
 
@@ -151,7 +151,7 @@ public class Villager {
         private String name;
         private String surname;
         private Integer age;
-        private String job; // Change this to an enum or a class
+        private Job job; // Change this to an enum or a class
         private List<String> characteristic; // Change this to an enum or a class
         private Integer stomachSize;
         private Integer health;
@@ -175,7 +175,7 @@ public class Villager {
             return this;
         }
 
-        public Builder job(String job) {
+        public Builder job(Job job) {
             this.job = job;
             return this;
         }

@@ -3,6 +3,8 @@ package org.acme;
 import io.quarkus.test.junit.QuarkusTest;
 import org.acme.creatures.Creature;
 import org.acme.creatures.CreatureType;
+import org.acme.villagers.Job;
+import org.acme.villagers.Villager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +31,7 @@ class CreatureTest {
                 .name("John")
                 .surname("Doe")
                 .age(25)
-                .job("Farmer")
+                .job(Job.FARMER)
                 .characteristic(List.of("Strong", "Hardworking"))
                 .stomachSize(10)
                 .health(100)
@@ -73,7 +75,7 @@ class CreatureTest {
                 .name("John")
                 .surname("Doe")
                 .age(25)
-                .job("Farmer")
+                .job(Job.FARMER)
                 .characteristic(List.of("Strong", "Hardworking"))
                 .stomachSize(10)
                 .health(10)
@@ -86,7 +88,7 @@ class CreatureTest {
                 .name("Jane")
                 .surname("Doe")
                 .age(25)
-                .job("Farmer")
+                .job(Job.FARMER)
                 .characteristic(List.of("Strong", "Hardworking"))
                 .stomachSize(10)
                 .health(10)

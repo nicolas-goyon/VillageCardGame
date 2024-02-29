@@ -1,6 +1,6 @@
 package org.acme.creatures;
 
-import org.acme.Villager;
+import org.acme.villagers.Villager;
 
 import java.util.List;
 
