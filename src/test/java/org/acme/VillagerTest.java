@@ -16,7 +16,7 @@ class VillagerTest {
 
     @BeforeEach
     void setUp() {
-        villager = new Villager.VillagerBuilder()
+        villager = new Villager.Builder()
                 .name("John")
                 .surname("Doe")
                 .age(25)
@@ -88,8 +88,8 @@ class VillagerTest {
         testBuilderException(builder -> builder.name("John").surname("Doe").age(25).job("Farmer").characteristic(List.of("Strong", "Hardworking")).stomachSize(10).health(100).baseHealth(100));
     }
 
-    private void testBuilderException(Consumer<Villager.VillagerBuilder> builderConsumer) {
-        Villager.VillagerBuilder builder = new Villager.VillagerBuilder();
+    private void testBuilderException(Consumer<Villager.Builder> builderConsumer) {
+        Villager.Builder builder = new Villager.Builder();
         builderConsumer.accept(builder);
         assertThrows(IllegalStateException.class, builder::build);
     }
@@ -120,12 +120,15 @@ class VillagerTest {
 
     @Test
     void  takeDamage(){
-        villager.takeDamage(10);
+        assertEquals(0, villager.takeDamage(10));
         assertEquals(90, villager.getHealth());
-        villager.takeDamage(100);
+        assertEquals(10, villager.takeDamage(100));
         assertEquals(0, villager.getHealth());
-        villager.takeDamage(100);
+        assertEquals(10, villager.takeDamage(10));
         assertEquals(0, villager.getHealth());
+
         assertThrows(IllegalArgumentException.class, () -> villager.takeDamage(-10));
+
+
     }
 }

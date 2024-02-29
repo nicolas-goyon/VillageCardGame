@@ -15,7 +15,7 @@ public class Villager {
     private int magic;
 
 
-    private Villager(VillagerBuilder builder) {
+    private Villager(Builder builder) {
         this.name = builder.name;
         this.surname = builder.surname;
         this.age = builder.age;
@@ -127,16 +127,27 @@ public class Villager {
         return disponibleFood;
     }
 
+    /**
+     *
+     * @param damage
+     * @return the damage not taken (the amount of damage that is above the health of the villager)
+     */
     public int takeDamage(int damage) {
         if (damage < 0) throw new IllegalArgumentException("Damage must be a positive number");
+        int damageLeft = damage - this.health;
         this.health -= damage;
-        if (this.health < 0) this.health = 0;
-        return this.health;
+
+        if (this.health < 0) {
+            this.health = 0;
+        }
+
+        return Math.max(damageLeft, 0);
+
     }
 
 
 
-    public static class VillagerBuilder {
+    public static class Builder {
         private String name;
         private String surname;
         private Integer age;
@@ -149,52 +160,52 @@ public class Villager {
         private Integer magic;
 
 
-        public VillagerBuilder name(String name) {
+        public Builder name(String name) {
             this.name = name;
             return this;
         }
 
-        public VillagerBuilder surname(String surname) {
+        public Builder surname(String surname) {
             this.surname = surname;
             return this;
         }
 
-        public VillagerBuilder age(Integer age) {
+        public Builder age(Integer age) {
             this.age = age;
             return this;
         }
 
-        public VillagerBuilder job(String job) {
+        public Builder job(String job) {
             this.job = job;
             return this;
         }
 
-        public VillagerBuilder characteristic(List<String> characteristic) {
+        public Builder characteristic(List<String> characteristic) {
             this.characteristic = characteristic;
             return this;
         }
 
-        public VillagerBuilder stomachSize(Integer stomachSize) {
+        public Builder stomachSize(Integer stomachSize) {
             this.stomachSize = stomachSize;
             return this;
         }
 
-        public VillagerBuilder health(Integer health) {
+        public Builder health(Integer health) {
             this.health = health;
             return this;
         }
 
-        public VillagerBuilder baseHealth(Integer baseHealth) {
+        public Builder baseHealth(Integer baseHealth) {
             this.baseHealth = baseHealth;
             return this;
         }
 
-        public VillagerBuilder damage(Integer damage) {
+        public Builder damage(Integer damage) {
             this.damage = damage;
             return this;
         }
 
-        public VillagerBuilder magic(Integer magic) {
+        public Builder magic(Integer magic) {
             this.magic = magic;
             return this;
         }
