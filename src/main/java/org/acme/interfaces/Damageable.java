@@ -21,4 +21,13 @@ public abstract class Damageable {
         return Math.max(damageLeft, 0);
 
     }
+
+    public int getHealth() {
+        return health;
+    }
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+
 }

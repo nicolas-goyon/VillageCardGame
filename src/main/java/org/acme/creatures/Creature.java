@@ -15,13 +15,6 @@ public class Creature extends Soldier {
         return name;
     }
 
-    public int getHealth() {
-        return health;
-    }
-
-    public int getDamage() {
-        return damage;
-    }
 
 
 

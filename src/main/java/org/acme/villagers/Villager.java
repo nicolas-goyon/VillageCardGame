@@ -1,5 +1,6 @@
 package org.acme.villagers;
 
+import org.acme.SoldierAttackResult;
 import org.acme.interfaces.Damageable;
 import org.acme.interfaces.Soldier;
 import org.acme.villagers.characteristics.Characteristic;
@@ -58,17 +59,11 @@ public class Villager extends Soldier {
         return stomachSize;
     }
 
-    public int getHealth() {
-        return health;
-    }
 
     public int getBaseHealth() {
         return baseHealth;
     }
 
-    public int getDamage() {
-        return damage;
-    }
 
     public int getMagic() {
         return magic;
@@ -104,17 +99,11 @@ public class Villager extends Soldier {
         this.stomachSize = stomacSize;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
-    }
 
     public void setBaseHealth(int baseHealth) {
         this.baseHealth = baseHealth;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
 
     public void setMagic(int magic) {
         this.magic = magic;
@@ -184,11 +173,11 @@ public class Villager extends Soldier {
     }
 
     @Override
-    public void attack(List<? extends Damageable> damageable) {
+    public SoldierAttackResult attack(List<? extends Damageable> damageable) {
         if (!this.job.equals(Job.WARRIOR)) {
             throw new IllegalStateException("Only soldiers can attack");
         }
-        super.attack(damageable);
+        return super.attack(damageable);
     }
 
 
