@@ -1,5 +1,6 @@
 package org.acme;
 
+import io.quarkus.logging.Log;
 import org.acme.creatures.Creature;
 import org.acme.villagers.Job;
 import org.acme.villagers.Villager;
@@ -129,7 +130,7 @@ public class Village {
                 warriors.add(villager);
             }
         }
-        SoldierAttackResult result = null;
+        SoldierAttackResult result;
         if (!warriors.isEmpty()) {
             result = creature.attack(warriors);
         } else {
@@ -219,5 +220,17 @@ public class Village {
         return listCreatures;
     }
 
+
+
+    public void changeVillagerJob(String name, String surname, Job job) {
+        Villager villager = villagers.stream()
+                .filter(v -> v.getName().equals(name) && v.getSurname().equals(surname))
+                .findFirst()
+                .orElse(null);
+        if (villager == null) {
+            throw new IllegalArgumentException(VILLAGER_NULL);
+        }
+        villager.setJob(job);
+    }
 
 }

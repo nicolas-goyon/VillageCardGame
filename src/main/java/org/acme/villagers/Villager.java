@@ -254,20 +254,40 @@ public class Villager extends Soldier {
 
 
         public Villager build() {
-            if (name == null ||
-                    surname == null ||
-                    age == null ||
-                    job == null ||
-                    characteristic == null ||
-                    stomachSize == null ||
-                    health == null ||
-                    baseHealth == null ||
-                    damage == null ||
-                    magic == null ||
-                    workingForce == null
-            ) {
-                throw new IllegalStateException("All fields must be set");
-            }
+            if (name == null)
+                throw new IllegalStateException("Name is required");
+
+            if (surname == null)
+                throw new IllegalStateException("Surname is required");
+
+            if (age == null)
+                throw new IllegalStateException("Age is required");
+
+            if (job == null)
+                throw new IllegalStateException("Job is required");
+
+            if (characteristic == null)
+                throw new IllegalStateException("Characteristic is required");
+
+            if (stomachSize == null)
+                throw new IllegalStateException("Stomach size is required");
+
+            if (health == null)
+                throw new IllegalStateException("Health is required");
+
+            if (baseHealth == null)
+                throw new IllegalStateException("Base health is required");
+
+            if (damage == null)
+                throw new IllegalStateException("Damage is required");
+
+            if (magic == null)
+                throw new IllegalStateException("Magic is required");
+
+            if (workingForce == null)
+                throw new IllegalStateException("Working force is required");
+
+
             return new Villager(this);
         }
     }
