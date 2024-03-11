@@ -3,7 +3,7 @@ package org.acme.creatures;
 import org.acme.interfaces.Soldier;
 
 public class Creature extends Soldier {
-    private final String name;
+    private String name;
 
     private Creature(Creature.Builder builder) {
         this.name = builder.name;
@@ -15,7 +15,9 @@ public class Creature extends Soldier {
         return name;
     }
 
-
+    public void setName(String name) {
+        this.name = name;
+    }
 
 
     public static class Builder {

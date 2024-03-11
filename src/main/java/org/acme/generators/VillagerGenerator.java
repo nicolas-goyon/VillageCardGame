@@ -6,12 +6,14 @@ import org.acme.villagers.Villager;
 import org.acme.villagers.characteristics.Characteristic;
 import org.acme.villagers.characteristics.VillagerCharacteristic;
 
+import java.security.SecureRandom;
 import java.util.List;
-import java.util.stream.Collector;
 
 public class VillagerGenerator {
 
-    public VillagerGenerator(){
+    private static final SecureRandom random = new SecureRandom();
+
+    private VillagerGenerator(){
         throw new IllegalStateException("Utility class");
     }
 
@@ -46,12 +48,12 @@ public class VillagerGenerator {
 
     private static String generateName(){
         String[] names = {"John", "Jane", "Jack", "Jill", "James", "Jenny", "Jasper", "Jasmine", "Jared", "Jade"};
-        return names[(int) (Math.random() * names.length)];
+        return names[(int) (random.nextFloat(0,1) * names.length)];
     }
 
     private static String generateSurname(){
         String[] surnames = {"Doe", "Smith", "Johnson", "Brown", "Williams", "Miller", "Taylor", "Wilson", "Davis", "White"};
-        return surnames[(int) (Math.random() * surnames.length)];
+        return surnames[(int) (random.nextFloat(0,1) * surnames.length)];
     }
 
     private static int generateAge(){
@@ -61,7 +63,7 @@ public class VillagerGenerator {
 
     private static Characteristic generateCharacteristic(){
         VillagerCharacteristic[] characteristics = VillagerCharacteristic.values();
-        return characteristics[(int) (Math.random() * characteristics.length)];
+        return characteristics[(int) (random.nextFloat(0,1) * characteristics.length)];
     }
 
     private static int generateStomachSize(){

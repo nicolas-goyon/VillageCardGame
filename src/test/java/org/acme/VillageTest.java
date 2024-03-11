@@ -178,8 +178,10 @@ class VillageTest {
     void attackMethods(){
         List<Creature> creatures = new ArrayList<>(List.of(CreatureType.GOBLIN.create(), CreatureType.GOBLIN.create(), CreatureType.GOBLIN.create()));
 
+        village.initNewAttack(creatures);
+
         village.creatureAttack(creatures.getFirst());
-        assertEquals(3, creatures.size());
+        assertEquals(3, village.getListCreatures().size());
         assertEquals(1, village.getVillagers().size());
         assertEquals(97, village.getVillagers().getFirst().getHealth());
 
@@ -199,20 +201,23 @@ class VillageTest {
                 .workingForce(10)
                 .build();
         village.addVillager(villager);
-
         village.creatureAttack(creatures.getFirst());
 
 
-        assertEquals(3, creatures.size());
+        assertEquals(3, village.getListCreatures().size());
         assertEquals(2, village.getVillagers().size());
         assertEquals(97, village.getVillagers().get(1).getHealth()); // Warrior has 3 damage
         assertEquals(100, village.getVillagers().getFirst().getHealth()); // Non warrior has 0 damage
 
-        village.villagerAttack(creatures, 1);
-        assertEquals(2, creatures.size());
+        assertEquals(3, village.getListCreatures().size());
+        assertEquals(10, village.getListCreatures().getFirst().getHealth());
+        assertEquals(10, village.getListCreatures().get(1).getHealth());
+        assertEquals(10, village.getListCreatures().get(2).getHealth());
+        village.villagerAttack(1);
+        assertEquals(2, village.getListCreatures().size());
         assertEquals(2, village.getVillagers().size());
-        assertEquals(10, creatures.getFirst().getHealth());
-        assertEquals(10, creatures.get(1).getHealth());
+        assertEquals(10, village.getListCreatures().getFirst().getHealth());
+        assertEquals(10, village.getListCreatures().get(1).getHealth());
 
     }
 
@@ -241,19 +246,22 @@ class VillageTest {
 
         village.addVillager(villager);
 
-        testVillagerAttackException(null, 1);
+        testVillagerAttackException(1);
 
         List<Creature> creatures = new ArrayList<>(List.of(CreatureType.GOBLIN.create(), CreatureType.GOBLIN.create(), CreatureType.GOBLIN.create()));
 
-        testVillagerAttackException(creatures, 3);
 
-        testVillagerAttackException(creatures, -1);
+        village.initNewAttack(creatures);
 
-        testVillagerAttackException(creatures, 0);
+        testVillagerAttackException(3);
+
+        testVillagerAttackException(-1);
+
+        testVillagerAttackException(0);
     }
 
-    private void testVillagerAttackException(List<Creature> creatures, int index) {
-        assertThrows(IllegalArgumentException.class, () -> village.villagerAttack(creatures, index));
+    private void testVillagerAttackException(int index) {
+        assertThrows(IllegalArgumentException.class, () -> village.villagerAttack(index));
     }
 
 
@@ -357,6 +365,177 @@ class VillageTest {
         assertEquals(97, results.getTargets().getFirst().getHealth());
     }
 
+    @Test
+    void testFightOver(){
+        List<Creature> creatures = new ArrayList<>(List.of(CreatureType.GOBLIN.create(), CreatureType.GOBLIN.create()));
+
+        Villager villager = new Villager.Builder()
+                .name("Ali")
+                .surname("Gator")
+                .age(25)
+                .job(Job.WARRIOR)
+                .characteristic(List.of())
+                .stomachSize(10)
+                .health(100)
+                .baseHealth(100)
+                .damage(10)
+                .magic(10)
+                .workingForce(10)
+                .build();
+
+        village.addVillager(villager);
+
+        village.initNewAttack(creatures);
+
+        assertFalse(village.isFightOver());
+
+        village.fightStep(); // Creature attack
+        assertFalse(village.isFightOver());
+
+        village.fightStep(); // Villager attack
+        assertFalse(village.isFightOver());
+
+        village.fightStep(); // Creature attack
+        assertFalse(village.isFightOver());
+
+        village.fightStep(); // Villager attack
+        assertTrue(village.isFightOver());
+    }
+
+    @Test
+    void testVillagerTurn(){
+        List<Creature> creatures = new ArrayList<>(List.of(CreatureType.GOBLIN.create(), CreatureType.GOBLIN.create()));
+
+        Villager villager = new Villager.Builder()
+                .name("Ali")
+                .surname("Gator")
+                .age(25)
+                .job(Job.WARRIOR)
+                .characteristic(List.of())
+                .stomachSize(10)
+                .health(100)
+                .baseHealth(100)
+                .damage(10)
+                .magic(10)
+                .workingForce(10)
+                .build();
+
+        village.addVillager(villager);
+
+        village.initNewAttack(creatures);
+
+        SoldierAttackResult results = village.villagerTurn();
+
+        assertEquals(Villager.class, results.getAttacker().getClass());
+        assertEquals(1, results.getTargets().size());
+    }
+
+    @Test
+    void testCreatureTurn() {
+        List<Creature> creatures = new ArrayList<>(List.of(CreatureType.GOBLIN.create(), CreatureType.GOBLIN.create()));
+
+        Villager villager = new Villager.Builder()
+                .name("Ali")
+                .surname("Gator")
+                .age(25)
+                .job(Job.WARRIOR)
+                .characteristic(List.of())
+                .stomachSize(10)
+                .health(100)
+                .baseHealth(100)
+                .damage(10)
+                .magic(10)
+                .workingForce(10)
+                .build();
+
+        village.addVillager(villager);
+
+        village.initNewAttack(creatures);
+
+        SoldierAttackResult results = village.creatureTurn();
+
+        assertEquals(Creature.class, results.getAttacker().getClass());
+        assertEquals(1, results.getTargets().size());
+        assertEquals(97, results.getTargets().getFirst().getHealth());
+    }
 
 
+
+
+    @Test
+    void testChangeVillagerJob(){
+        List<Creature> creatures = new ArrayList<>(List.of(CreatureType.GOBLIN.create(), CreatureType.GOBLIN.create()));
+
+        village.initNewAttack(creatures);
+        SoldierAttackResult results = village.fightStep(); // Creature attack
+
+        assertEquals(creatures.getFirst().getClass(), results.getAttacker().getClass());
+        assertEquals(1, results.getTargets().size());
+        assertEquals(97, results.getTargets().getFirst().getHealth());
+
+        SoldierAttackResult results2 = village.fightStep(); // Still creature attack because no warrior
+
+        assertEquals(creatures.getFirst().getClass(), results2.getAttacker().getClass());
+        assertEquals(1, results2.getTargets().size());
+        assertEquals(94, results2.getTargets().getFirst().getHealth());
+
+        village.changeVillagerJob(village.getVillagers().getFirst().getName(), village.getVillagers().getFirst().getSurname(), Job.WARRIOR);
+
+        results = village.fightStep();
+
+        assertEquals(Villager.class, results.getAttacker().getClass());
+        assertEquals(1, results.getTargets().size());
+        assertEquals(0, results.getTargets().getFirst().getHealth());
+
+        assertEquals(1, village.getListCreatures().size());
+        assertEquals(10, village.getListCreatures().getFirst().getHealth());
+
+    }
+
+    @Test
+    void testFightStepExceptions() {
+        assertThrows(IllegalStateException.class, () -> village.fightStep());
+
+        List<Creature> creatures = new ArrayList<>(List.of(CreatureType.GOBLIN.create(), CreatureType.GOBLIN.create()));
+
+        village.initNewAttack(creatures);
+
+        village.setCreatureIndex(creatures.size());
+
+        assertThrows(IllegalStateException.class, () -> village.fightStep());
+
+        village.setCreatureIndex(0);
+
+        village.setVillagerIndex(village.getVillagers().size());
+
+        assertThrows(IllegalStateException.class, () -> village.fightStep());
+    }
+
+    @Test
+    void testHealVillagers(){
+        Villager villager = new Villager.Builder()
+                .name("Ali")
+                .surname("Gator")
+                .age(25)
+                .job(Job.HEALER)
+                .characteristic(List.of())
+                .stomachSize(10)
+                .health(50)
+                .baseHealth(100)
+                .damage(10)
+                .magic(10)
+                .workingForce(10)
+                .build();
+
+        village.addVillager(villager);
+
+        List<Villager> villagers = village.getVillagers();
+
+        villagers.getFirst().setHealth(50);
+
+        village.healVillagers();
+
+        assertEquals(60, villagers.getFirst().getHealth());
+
+    }
 }

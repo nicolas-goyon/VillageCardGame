@@ -6,24 +6,20 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.websocket.server.ServerEndpoint;
 
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.server.PathParam;
-import jakarta.websocket.server.ServerEndpoint;
 import jakarta.websocket.Session;
 import org.acme.SynchronizedVillage;
 import org.acme.Village;
 import org.acme.VillageManagement;
 import org.acme.generators.EventGenerator;
 import org.acme.villagers.Job;
-import org.acme.villagers.Villager;
 
 
 @ServerEndpoint("/chat/{username}")
@@ -44,21 +40,21 @@ public class Websocket {
     }
 
     @OnClose
-    public void onClose(Session session, @PathParam("username") String username) {
+    public void onClose(Session session, @PathParam("username") String username) throws InterruptedException {
         sessions.remove(username);
         villages.get(username).stopVillage();
         villages.remove(username);
     }
 
     @OnError
-    public void onError(Session session, @PathParam("username") String username, Throwable throwable) {
+    public void onError(Session session, @PathParam("username") String username, Throwable throwable) throws InterruptedException {
         sessions.remove(username);
         villages.get(username).stopVillage();
         villages.remove(username);
     }
 
     @OnMessage
-    public void onMessage(String message, @PathParam("username") String username) throws InterruptedException {
+    public void onMessage(String message, @PathParam("username") String username) {
         // Parse the message (JSON)
         Log.info("Received message: " + message);
         JsonObject json = new JsonObject(message);

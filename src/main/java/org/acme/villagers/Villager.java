@@ -5,6 +5,7 @@ import org.acme.interfaces.Damageable;
 import org.acme.interfaces.Soldier;
 import org.acme.villagers.characteristics.Characteristic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Villager extends Soldier {
@@ -133,6 +134,7 @@ public class Villager extends Soldier {
 
 
     public int heal(int healthPoints) {
+
         if (healthPoints <= 0) {
             return 0;
         }
@@ -159,18 +161,25 @@ public class Villager extends Soldier {
         return this.workingForce;
     }
 
-    public void heal(List<Villager> villagers) {
+    public List<Villager> heal(List<Villager> villagers) {
         if(!this.job.equals(Job.HEALER)) {
             throw new IllegalStateException("Only healers can heal");
         }
         int healthPoints = this.magic;
+
+        List<Villager> villagersHealed = new ArrayList<>();
+
         for (Villager villager : villagers) {
             if (healthPoints <= 0) {
                 break;
             }
             healthPoints = villager.heal(healthPoints);
+            villagersHealed.add(villager);
         }
+
+        return villagersHealed;
     }
+
 
     @Override
     public SoldierAttackResult attack(List<? extends Damageable> damageable) {

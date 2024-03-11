@@ -140,8 +140,8 @@ class VillagerTest {
     @Test
     void jobEnumTest(){
         assertEquals("Farmer", Job.FARMER.getName());
-        assertEquals("Warrior", Job.WARRIOR.getName());
-        assertEquals("Healer", Job.HEALER.getName());
+        assertEquals("Soldier", Job.WARRIOR.getName());
+        assertEquals("Doctor", Job.HEALER.getName());
         assertEquals("Unemployed", Job.UNEMPLOYED.getName());
     }
 

@@ -16,6 +16,7 @@ public enum CreatureType {
     }
 
     public Creature create() {
+
         return new Creature.Builder()
                 .name(name)
                 .health(health)

@@ -3,12 +3,13 @@ package org.acme;
 import org.acme.interfaces.Soldier;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SoldierAttackResult {
 
-    private Soldier attacker;
+    private final Soldier attacker;
 
-    private ArrayList<Soldier> targets;
+    private final ArrayList<Soldier> targets;
 
     public SoldierAttackResult(Soldier attacker) {
         this.attacker = attacker;
@@ -19,7 +20,7 @@ public class SoldierAttackResult {
         return attacker;
     }
 
-    public ArrayList<Soldier> getTargets() {
+    public List<Soldier> getTargets() {
         return targets;
     }
 

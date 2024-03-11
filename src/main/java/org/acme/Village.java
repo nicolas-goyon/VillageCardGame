@@ -1,6 +1,5 @@
 package org.acme;
 
-import io.quarkus.logging.Log;
 import org.acme.creatures.Creature;
 import org.acme.villagers.Job;
 import org.acme.villagers.Villager;
@@ -21,19 +20,6 @@ public class Village {
 
 
     private static final int BASEFOOD = 100;
-    private static final Villager BASEVILLAGER = new Villager.Builder()
-            .name("John")
-            .surname("Doe")
-            .age(20)
-            .job(Job.UNEMPLOYED)
-            .characteristic(List.of())
-            .stomachSize(10)
-            .health(100)
-            .baseHealth(100)
-            .damage(10)
-            .magic(0)
-            .workingForce(10)
-            .build();
 
 
     private final String name;
@@ -41,9 +27,25 @@ public class Village {
     private int foodSupplies;
 
     public Village(String name) {
+        Villager baseVillager = new Villager.Builder()
+                .name("John")
+                .surname("Doe")
+                .age(20)
+                .job(Job.UNEMPLOYED)
+                .characteristic(List.of())
+                .stomachSize(10)
+                .health(100)
+                .baseHealth(100)
+                .damage(10)
+                .magic(0)
+                .workingForce(20)
+                .build();
+
+
+
         this.name = name;
         this.villagers = new ArrayList<>();
-        villagers.add(BASEVILLAGER);
+        villagers.add(baseVillager);
         this.foodSupplies = BASEFOOD;
     }
 
@@ -137,14 +139,14 @@ public class Village {
             result = creature.attack(villagers);
         }
 
-        // Remove dead villagers
+        // remove dead villagers
         villagers.removeIf(villager -> villager.getHealth() <= 0);
 
         return result;
     }
 
-    public SoldierAttackResult villagerAttack(List<Creature> creatures, int index) {
-        if (creatures == null) {
+    public SoldierAttackResult villagerAttack(int index) {
+        if (listCreatures == null || listCreatures.isEmpty()) {
             throw new IllegalArgumentException(CREATURE_NULL);
         }
         if (index < 0 || index >= villagers.size()) {
@@ -154,9 +156,12 @@ public class Village {
             throw new IllegalArgumentException(WARRIOR_ATTACK);
         }
 
-        SoldierAttackResult result = villagers.get(index).attack(creatures);
-        // Remove dead creatures
-        creatures.removeIf(creature -> creature.getHealth() <= 0);
+
+
+        SoldierAttackResult result = villagers.get(index).attack(listCreatures);
+
+        // remove dead creatures
+        listCreatures = listCreatures.stream().filter(creature -> creature.getHealth() > 0).toList();
 
         return result;
     }
@@ -178,23 +183,96 @@ public class Village {
         villagerIndex = getNextWarriorIndex();
     }
 
+    // Scope : tests
+    public void setCreatureIndex(int index) {
+        creatureIndex = index;
+    }
+
+    // Scope : tests
+    public void setVillagerIndex(int index) {
+        villagerIndex = index;
+    }
+
     public SoldierAttackResult fightStep() {
-        if (listCreatures == null || listCreatures.isEmpty()) {
-            throw new IllegalArgumentException(CREATURE_EMPTY);
+        if (isFightOver())
+            throw new IllegalStateException("The fight is over");
+
+        if (creatureIndex >= listCreatures.size()) {
+            throw new IllegalStateException("Creature index out of bounds");
         }
 
-        SoldierAttackResult result = null;
+        if (villagerIndex >= villagers.size()) {
+            throw new IllegalStateException("Villager index out of bounds");
+        }
+
+        if (villagerIndex == -1) villagerIndex = getFirstWarriorIndex();
+
         // Alternate attacks between creatures and villagers
-        if (creatureTurn) {
-            result = creatureAttack(listCreatures.get(creatureIndex));
-            creatureIndex = (creatureIndex + 1) % listCreatures.size();
-        } else if (villagerIndex != -1) {
-            result = villagerAttack(listCreatures, villagerIndex);
-            villagerIndex = getNextWarriorIndex();
+        SoldierAttackResult result = null;
+
+        // HACK : needs to be refactored
+        if (!creatureTurn){
+            if (villagerIndex != -1) {
+                result = villagerTurn();
+                creatureTurn = !creatureTurn;
+            }else {
+                result = creatureTurn();
+            }
+        }
+        else {
+            result = creatureTurn();
+            creatureTurn = !creatureTurn;
         }
 
-        creatureTurn = !creatureTurn;
+
+        // remove dead creatures
+        listCreatures = listCreatures.stream().filter(creature -> creature.getHealth() > 0).toList();
+
+        // remove dead villagers
+        villagers.removeIf(villager -> villager.getHealth() <= 0);
+
+
         return result;
+    }
+
+    public int getFirstWarriorIndex(){
+        for (int i = 0; i < villagers.size(); i++) {
+            if (villagers.get(i).getJob() == Job.WARRIOR) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public SoldierAttackResult villagerTurn(){
+        SoldierAttackResult result = villagerAttack(villagerIndex);
+        villagerIndex = getNextWarriorIndex();
+
+        if (creatureIndex >= listCreatures.size()) {
+            creatureIndex = 0;
+        }
+
+        return result;
+    }
+
+    public SoldierAttackResult creatureTurn(){
+        SoldierAttackResult result = creatureAttack(listCreatures.get(creatureIndex));
+        creatureIndex = (creatureIndex + 1) % listCreatures.size();
+
+
+        // check if the villagerIndex is still to a warrior else set to -1
+        if (villagerIndex != -1 && villagers.get(villagerIndex).getJob() != Job.WARRIOR) {
+            villagerIndex = -1;
+        }
+
+        return result;
+    }
+
+    public boolean isFightOver() {
+        if (listCreatures == null || listCreatures.isEmpty() || villagers == null || villagers.isEmpty()) {
+            return true;
+        }
+        return listCreatures.stream().allMatch(creature -> creature.getHealth() <= 0) || villagers.stream().allMatch(villager -> villager.getHealth() <= 0);
     }
 
     private int getNextWarriorIndex() {
@@ -211,7 +289,6 @@ public class Village {
                  break;
              }
          }
-
 
         return nextIndex;
     }
@@ -233,4 +310,18 @@ public class Village {
         villager.setJob(job);
     }
 
+    public List<Villager> healVillagers() {
+        List<Villager> villagersHealed = new ArrayList<>();
+        for (Villager villager : villagers) {
+            if (villager.getJob() == Job.HEALER) {
+                villagersHealed.addAll(villager.heal(villagers));
+            }
+        }
+
+        // Remove double entries
+        villagersHealed = villagersHealed.stream().distinct().toList();
+
+
+        return villagersHealed;
+    }
 }

@@ -1,16 +1,21 @@
 package org.acme;
 
 import jakarta.websocket.Session;
+import org.acme.creatures.Creature;
+import org.acme.generators.CreatureGenerator;
 import org.acme.generators.EventGenerator;
 import org.acme.generators.VillagerGenerator;
 import org.acme.villagers.Villager;
 
+import java.util.List;
+
 public class VillageManagement {
 
-    private Village village;
-    private Session session;
+    private final Village village;
+    private final Session session;
     private Thread villageThread;
     private volatile boolean running;
+    private final CreatureGenerator creatureGenerator;
 
 
 
@@ -18,6 +23,7 @@ public class VillageManagement {
         this.village = village;
         this.session = session;
         this.running = false;
+        this.creatureGenerator = new CreatureGenerator();
     }
 
     public void startVillage(){
@@ -26,7 +32,7 @@ public class VillageManagement {
             villageThread.interrupt();
         }
         this.running = true;
-        villageThread = new Thread(this::loopVillage);
+        villageThread = new Thread(this::runVillage);
         villageThread.start();
     }
 
@@ -38,33 +44,23 @@ public class VillageManagement {
     private int days = 0;
 
 
-    private void loopVillage(){
-        // Vilage loop
-        while (running) {
-            try {
-                Thread.sleep(TICKTIME);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            switch (step){
-                case 1:
-                    village.produceFood();
-                    session.getAsyncRemote().sendText(EventGenerator.foodProduced(village));
-                    break;
-                case 2:
-                    if (days % 3 == 0){
-                        Villager newOne = VillagerGenerator.newVillager(village);
-                        newOne.applyCharacteristics();
-                        village.addVillager(newOne);
-                        session.getAsyncRemote().sendText(EventGenerator.newVillager(village, newOne));
-                    }
-                    break;
-                case 4:
-                    village.eatFood();
-                    session.getAsyncRemote().sendText(EventGenerator.foodEaten(village));
-                    break;
-            }
+    public void runVillage(){
+        try {
+            loopVillage();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+
+    private void loopVillage() throws InterruptedException {
+        // Village loop
+        while (running) {
+            Thread.sleep(TICKTIME);
+
+            stepExecution();
+
+            // Increment the step
             step += 1;
             if (step > TICKS){
                 step = 0;
@@ -74,14 +70,74 @@ public class VillageManagement {
         }
     }
 
-    public void stopVillage(){
+    private void stepExecution(){
+        switch (step){
+            case 1:
+                foodProductionStep();
+                break;
+            case 2:
+                villagerStep();
+                break;
+            case 3:
+                attackStep();
+                break;
+            case 4:
+                eatingStep();
+                break;
+            case 5:
+                healingStep();
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    private void foodProductionStep(){
+        village.produceFood();
+        session.getAsyncRemote().sendText(EventGenerator.foodProduced(village));
+    }
+
+    private void villagerStep(){
+        if (days % 3 == 0){
+            Villager newOne = VillagerGenerator.newVillager(village);
+            newOne.applyCharacteristics();
+            village.addVillager(newOne);
+            session.getAsyncRemote().sendText(EventGenerator.newVillager(newOne));
+        }
+    }
+
+    private void attackStep(){
+        if (days % 6 == 0 && village.isFightOver()){
+            // Attack the village
+
+            List<Creature> creatures = creatureGenerator.generateCreatures();
+
+            village.initNewAttack(creatures);
+            session.getAsyncRemote().sendText(EventGenerator.newAttack(creatures));
+        }
+        else if (!village.isFightOver()) {
+            // Fight step
+            SoldierAttackResult result = village.fightStep();
+            session.getAsyncRemote().sendText(EventGenerator.fightStep(result));
+        }
+
+    }
+
+    private void eatingStep(){
+        village.eatFood();
+        session.getAsyncRemote().sendText(EventGenerator.foodEaten(village));
+    }
+
+    private void healingStep(){
+        List<Villager> healed = village.healVillagers();
+        session.getAsyncRemote().sendText(EventGenerator.healVillagers(healed));
+    }
+
+    public void stopVillage() throws InterruptedException {
         // Stop the village loop
         this.running = false;
-        try {
-            villageThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        villageThread.join();
         villageThread = null;
     }
 
