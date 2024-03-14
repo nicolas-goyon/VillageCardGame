@@ -11,10 +11,16 @@ import java.util.List;
 
 public class VillagerGenerator {
 
-    private static final SecureRandom random = new SecureRandom();
+    private static SecureRandom random = new SecureRandom();
 
     private VillagerGenerator(){
         throw new IllegalStateException("Utility class");
+    }
+
+    public static void setRandom(SecureRandom random){
+        // This method is not used in the code
+        // It is used for testing purposes
+        VillagerGenerator.random = random;
     }
 
     public static Villager newVillager(Village village){
@@ -46,43 +52,43 @@ public class VillagerGenerator {
     }
 
 
-    private static String generateName(){
+    public static String generateName(){
         String[] names = {"John", "Jane", "Jack", "Jill", "James", "Jenny", "Jasper", "Jasmine", "Jared", "Jade"};
         return names[(int) (random.nextFloat(0,1) * names.length)];
     }
 
-    private static String generateSurname(){
+    public static String generateSurname(){
         String[] surnames = {"Doe", "Smith", "Johnson", "Brown", "Williams", "Miller", "Taylor", "Wilson", "Davis", "White"};
         return surnames[(int) (random.nextFloat(0,1) * surnames.length)];
     }
 
-    private static int generateAge(){
+    public static int generateAge(){
         return NumbersGenerator.generateNormalDistributedNumber(40.0, 20.0).intValue();
     }
 
 
-    private static Characteristic generateCharacteristic(){
+    public static Characteristic generateCharacteristic(){
         VillagerCharacteristic[] characteristics = VillagerCharacteristic.values();
         return characteristics[(int) (random.nextFloat(0,1) * characteristics.length)];
     }
 
-    private static int generateStomachSize(){
+    public static int generateStomachSize(){
         return NumbersGenerator.generateNormalDistributedNumber(20, 8).intValue();
     }
 
-    private static int generateBaseHealth(){
+    public static int generateBaseHealth(){
         return NumbersGenerator.generateNormalDistributedNumber(50, 20).intValue();
     }
 
-    private static int generateDamage(){
+    public static int generateDamage(){
         return NumbersGenerator.generateNormalDistributedNumber(8, 5).intValue();
     }
 
-    private static int generateMagic(){
+    public static int generateMagic(){
         return NumbersGenerator.generateNormalDistributedNumber(20, 10).intValue();
     }
 
-    private static int generateWorkingForce(){
+    public static int generateWorkingForce(){
         return NumbersGenerator.generateNormalDistributedNumber(35, 15).intValue();
     }
 

@@ -18,6 +18,7 @@ dependencies {
     testImplementation "io.quarkus:quarkus-jacoco"
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
+    testImplementation "org.mockito:mockito-core:3.+"
 }
 
 group 'org.acme'
@@ -49,7 +50,7 @@ compileTestJava {
 sonar {
     properties {
         property "sonar.projectKey", "projet-16"
-        property "sonar.token", "sqp_5765f47453c6e99353181a05732a61005a2ac04c"
+        property "sonar.token", "sqp_c3a88f1dc47d9c6fa6fa3ba224772ca567f85cd5"
         property "sonar.projectName", "projet-16"
         property "sonar.qualitygate.wait", true
         property "sonar.gradle.skipCompile", true

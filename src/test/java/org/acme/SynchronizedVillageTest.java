@@ -14,12 +14,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
-class VillageTest {
-    private Village village;
+class SynchronizedVillageTest {
+    private SynchronizedVillage village;
 
     @BeforeEach
     void setUp() {
-        village = new Village("TestVillage");
+        village = new SynchronizedVillage("TestVillage");
 
     }
 

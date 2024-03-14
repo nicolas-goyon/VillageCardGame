@@ -281,13 +281,6 @@ public class EventGenerator {
         json.append(QUOTE).append(key).append(QUOTE + ": ").append(QUOTE).append(value).append(QUOTE).append(",");
     }
 
-    public static void appendJson(StringBuilder json, String key, String value, boolean isLast) {
-        json.append(QUOTE).append(key).append(QUOTE + ": ").append(QUOTE).append(value).append(QUOTE);
-        if (!isLast) {
-            json.append(",");
-        }
-    }
-
     public static void appendJson(StringBuilder json, String key, int value) {
         json.append(QUOTE).append(key).append(QUOTE + ": ").append(value).append(",");
     }
@@ -304,10 +297,4 @@ public class EventGenerator {
         json.append(QUOTE).append(value).append(QUOTE).append(",");
     }
 
-    public static void appendJsonArray(StringBuilder json, String value, boolean isLast) {
-        json.append(QUOTE).append(value).append(QUOTE);
-        if (!isLast) {
-            json.append(",");
-        }
-    }
 }

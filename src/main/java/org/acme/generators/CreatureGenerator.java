@@ -19,15 +19,18 @@ public class CreatureGenerator {
         while (creatures.isEmpty()){
             creatures = generateCreatureGroup();
         }
+        difficulty++;
         return creatures;
+    }
+
+    public void setDifficulty(int difficulty){
+        this.difficulty = difficulty;
     }
 
 
     public List<Creature> generateCreatureGroup(){
         int numberOfCreatures = NumbersGenerator.generateNormalDistributedNumber(difficulty * 3.0, difficulty).intValue();
-
         // proportion of each creature
-        int goblin = (int) (numberOfCreatures * 0.6);
         int orc = (int) (numberOfCreatures * 0.3);
         int snake = (int) (numberOfCreatures * 0.1);
 
@@ -35,9 +38,10 @@ public class CreatureGenerator {
         // The higher the difficulty, the more orcs
         if (difficulty > 3){
             orc = (int) (numberOfCreatures * 0.5);
-            goblin = (int) (numberOfCreatures * 0.4);
             snake = (int) (numberOfCreatures * 0.1);
         }
+
+        int goblin = numberOfCreatures - orc - snake;
 
 
         // Generate the creatures
@@ -57,8 +61,6 @@ public class CreatureGenerator {
             creature.setName(creature.getName() + "-" + (creatures.indexOf(creature)+1));
         }
 
-
-        this.difficulty++;
         return creatures;
     }
 

@@ -126,7 +126,7 @@ public class VillagerOption {
     }
 
     public boolean isAll(){
-        return name && surname && age && job && characteristic && stomachSize && baseHealth && magic && workingForce;
+        return name && surname && age && job && characteristic && stomachSize && health && baseHealth && magic && damage && workingForce;
     }
 
     public VillagerOption setAll(){

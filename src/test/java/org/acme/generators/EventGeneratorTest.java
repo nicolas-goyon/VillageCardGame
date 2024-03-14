@@ -199,5 +199,58 @@ class EventGeneratorTest {
         assertEquals(expectedResult, event);
     }
 
+    @Test
+    void testNewAttack(){
+        List<Creature> creatures = List.of(CreatureType.GOBLIN.create(), CreatureType.GOBLIN.create(), CreatureType.GOBLIN.create());
+
+        String result = EventGenerator.newAttack(creatures);
+        assertNotNull(result);
+        String expectedResult = "{\"eventType\": \"newAttack\",\"creatures\": [{\"name\": \"Goblin\",\"health\": 10,\"damage\": 3},{\"name\": \"Goblin\",\"health\": 10,\"damage\": 3},{\"name\": \"Goblin\",\"health\": 10,\"damage\": 3}]}";
+        assertEquals(expectedResult, result);
+    }
+
+
+    @Test
+    void testHealVillagers(){
+        List<Villager> villagers = List.of(
+                new Villager.Builder()
+                        .name("Test")
+                        .surname("Guy")
+                        .age(20)
+                        .job(Job.UNEMPLOYED)
+                        .characteristic(List.of())
+                        .stomachSize(10)
+                        .health(100)
+                        .baseHealth(100)
+                        .damage(10)
+                        .magic(0)
+                        .workingForce(20)
+                        .build(),
+                new Villager.Builder()
+                        .name("Test2")
+                        .surname("Guy2")
+                        .age(20)
+                        .job(Job.UNEMPLOYED)
+                        .characteristic(List.of())
+                        .stomachSize(10)
+                        .health(100)
+                        .baseHealth(100)
+                        .damage(10)
+                        .magic(0)
+                        .workingForce(20)
+                        .build()
+        );
+
+        String result = EventGenerator.healVillagers(villagers);
+        assertNotNull(result);
+        String expectedResult = "{\"eventType\": \"healVillagers\",\"guys\": [{\"name\": \"Test\",\"surname\": \"Guy\",\"newHealth\": 100},{\"name\": \"Test2\",\"surname\": \"Guy2\",\"newHealth\": 100}]}";
+        assertEquals(expectedResult, result);
+
+        result = EventGenerator.healVillagers(List.of());
+        assertNotNull(result);
+        expectedResult = "{\"eventType\": \"healVillagers\",\"guys\": []}";
+        assertEquals(expectedResult, result);
+    }
+
 
 }
