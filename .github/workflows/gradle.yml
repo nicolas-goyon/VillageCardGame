@@ -30,4 +30,3 @@ jobs:
       - name: Run tests
         run: ./gradlew clean build check test sonar
 
-        
